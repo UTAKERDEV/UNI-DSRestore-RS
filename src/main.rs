@@ -15,7 +15,6 @@ fn main() -> io::Result<()> {
     println!("📁 Creating/opening registry key: {}", hvc_path);
     let (hvc_key, _) = hklm.create_subkey(hvc_path)?;
 
-    // Modifications DeviceGuard
     dg_key.set_value("EnableVirtualizationBasedSecurity", &1u32)?;
     println!("✅ Set EnableVirtualizationBasedSecurity = 1");
 
@@ -25,7 +24,6 @@ fn main() -> io::Result<()> {
     dg_key.set_value("Locked", &0u32)?;
     println!("✅ Set Locked = 0");
 
-    // Modifications HypervisorEnforcedCodeIntegrity
     hvc_key.set_value("Enabled", &1u32)?;
     println!("✅ Set Enabled (HVCI) = 1");
 
@@ -34,7 +32,6 @@ fn main() -> io::Result<()> {
 
     println!("\n✅ All DeviceGuard and HVCI registry values successfully updated.");
 
-    // Demande de redémarrage
     print!("\n🔁 Do you want to reboot now to apply registry modification? [yes/no]: ");
     io::stdout().flush()?;
 
@@ -45,8 +42,8 @@ fn main() -> io::Result<()> {
     if answer == "yes" || answer == "y" {
         println!("🔄 Rebooting system...");
         Command::new("shutdown")
-            .args(["/r", "/t", "0"]) // redémarrage immédiat
-            .spawn()?; // lancer sans attendre
+            .args(["/r", "/t", "0"])
+            .spawn()?;
     } else {
         println!("⏹️ Reboot canceled. Please reboot manually later to apply changes.");
     }
